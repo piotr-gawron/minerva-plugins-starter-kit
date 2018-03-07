@@ -6,7 +6,7 @@ const pluginVersion = '1.0.0';
 const globals = {
     selected: [],
     allBioEntities: [],
-    picked: undefined
+    pickedRandomly: undefined
 };
 
 // ******************************************************************************
@@ -100,8 +100,8 @@ function initMainPageStructure(){
             </div>
         </div>
     `);
-    container.append('<button type="button" class="btn-highlight btn btn-primary btn-default btn-block">Highlight</button>');
     container.append('<button type="button" class="btn-focus btn btn-primary btn-default btn-block">Focus</button>');
+    container.append('<button type="button" class="btn-highlight btn btn-primary btn-default btn-block">Highlight</button>');
 
     container.append('<hr>');
     container.append('<button type="button" class="btn-pick-random btn btn-primary btn-default btn-block">Retrieve random object from map</button>');
@@ -147,11 +147,11 @@ function searchListener(entites) {
 function pickRandom() {
 
     function pick(){
-        globals.picked = globals.allBioEntities[Math.floor(Math.random() * globals.allBioEntities.length)];
+        globals.pickedRandomly = globals.allBioEntities[Math.floor(Math.random() * globals.allBioEntities.length)];
 
-        let html = `${globals.picked.constructor.name} - `;
-        if (globals.picked.constructor.name === 'Alias') html += `${globals.picked.getElementId()} - ${globals.picked.getName()}`;
-        else html += `${globals.picked.getReactionId()}`;
+        let html = `${globals.pickedRandomly.constructor.name} - `;
+        if (globals.pickedRandomly.constructor.name === 'Alias') html += `${globals.pickedRandomly.getElementId()} - ${globals.pickedRandomly.getName()}`;
+        else html += `${globals.pickedRandomly.getReactionId()}`;
         pluginContainer.find('.panel-randomly-picked .panel-body').html(html);
     }
     if (globals.allBioEntities.length > 0) {
@@ -165,17 +165,17 @@ function pickRandom() {
     }
 }
 
-function highlightSelected(picked = false) {
+function highlightSelected(pickedRandomly = false) {
 
     const highlightDefs = [];
 
-    if (picked) {
-        if (globals.picked) {
+    if (pickedRandomly) {
+        if (globals.pickedRandomly) {
             highlightDefs.push({
                 element: {
-                    id: globals.picked.id,
-                    modelId: globals.picked.getModelId(),
-                    type: globals.picked.constructor.name.toUpperCase()
+                    id: globals.pickedRandomly.id,
+                    modelId: globals.pickedRandomly.getModelId(),
+                    type: globals.pickedRandomly.constructor.name.toUpperCase()
                 },
                 type: "SURFACE",
                 options: {
@@ -192,11 +192,7 @@ function highlightSelected(picked = false) {
                     modelId: e.getModelId(),
                     type: "ALIAS"
                 },
-                type: "SURFACE",
-                options: {
-                    color: '#FF0000',
-                    opacity: 0.5
-                }
+                type: "ICON"
             });
         });
     }
@@ -204,7 +200,7 @@ function highlightSelected(picked = false) {
     minervaProxy.project.map.showBioEntity(highlightDefs);
 }
 
-function focusOnSelected(picked = false) {
+function focusOnSelected(pickedRandomly = false) {
 
     function focus(entity) {
         if (entity.constructor.name === 'Alias') {
@@ -221,18 +217,18 @@ function focusOnSelected(picked = false) {
                 x1: entity.getCenter().x,
                 y1: entity.getCenter().y,
                 x2: entity.getCenter().x,
-                y2: entity.getCenter().x
+                y2: entity.getCenter().y
             });
         }
     }
 
-    if (!picked && globals.selected.length > 0)  focus(globals.selected[0]);
-    if (picked && globals.picked) focus(globals.picked);
+    if (!pickedRandomly && globals.selected.length > 0)  focus(globals.selected[0]);
+    if (pickedRandomly && globals.pickedRandomly) focus(globals.pickedRandomly);
 }
 
 function retrieveUniprot() {
 
-    const query = pluginContainer.find('.panel-uniprot .panel-randomly-picked').text();
+    const query = pluginContainer.find('.panel-randomly-picked .panel-body').text();
     $.ajax({
         type: 'GET',
         url: 'https://www.uniprot.org/uniprot/?query=' + query + '&sort=score&columns=id,entry%20name,reviewed,protein%20names,3d,genes,organism,length&format=tab&limit=10'
