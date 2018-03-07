@@ -18,6 +18,14 @@ The starter-kit example uses NPM (node package manager) and Browserify (and few 
 * run `npm run build` to build the plugin which will be available in the *dist* directory
 * publish the resulting *plugin.js* file somewhere where it can be accessed by Minerva (please beware that if the instance is running on HTTPS, the plugin must be also accessible through HTTPS)
 
+For the development process you might want to have your local instance of Minerva running, so that you do not have to publish the plugin file every time you do a change. However, if you do not have a local Minerva instance, you can use command line to commit and push your plugin to, e.g., GitHub and provide Minerva address of the raw file. So for example if your GitHub repository with the plugin is [https://github.com/davidhoksza/minerva-plugins-starter-kit/](https://github.com/davidhoksza/minerva-plugins-starter-kit/) you can run
+
+```
+npm run build && git commit -m "distribution commit" dist/plugin.js && git push
+```
+
+which will build your plugin and commit and push it to the Git repository (GitHub in our case) and your plugin will be available at [https://github.com/davidhoksza/minerva-plugins-starter-kit/blob/master/dist/plugin.js](https://github.com/davidhoksza/minerva-plugins-starter-kit/blob/master/dist/plugin.js)
+
 ## Plugin structure
 
 The starter-kit contains CSS with styles sheets and JavaScript code. The kit actually uses SCSS ([Sass](https://sass-lang.com/) extension of CSS) which is then compiled into CSS during the build process. The JavaScript code consists of a single `index.js` file which:
@@ -55,7 +63,3 @@ Minerva also exposes variable called `ServerConnector` to the global scope (ther
 ###### Minerva's API
 
 It can happen that there exists a (mainly data-related) functionality which is not available in the proxy object but is available through [Minerva's REST API](https://git-r3lab.uni.lu/piotr.gawron/minerva). In such case you can use Ajax to retrieve the data (the easiest way is probably to use jQuery's [getJSON](http://api.jquery.com/jquery.getjson/) function).
-
-
-
-
