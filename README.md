@@ -24,7 +24,7 @@ For the development process you might want to have your local instance of Minerv
 npm run build && git commit -m "distribution commit" dist/plugin.js && git push
 ```
 
-which will build your plugin and commit and push it to the Git repository (GitHub in our case) and your plugin will be available at [https://github.com/davidhoksza/minerva-plugins-starter-kit/blob/master/dist/plugin.js](https://github.com/davidhoksza/minerva-plugins-starter-kit/blob/master/dist/plugin.js)
+which will build your plugin and commit and push it to the Git repository (GitHub in our case) and your plugin will be available at [https://raw.githubusercontent.com/davidhoksza/minerva-plugins-starter-kit/master/dist/plugin.js](https://raw.githubusercontent.com/davidhoksza/minerva-plugins-starter-kit/master/dist/plugin.js)
 
 ## Plugin structure
 
@@ -63,3 +63,7 @@ Minerva also exposes variable called `ServerConnector` to the global scope (ther
 ###### Minerva's API
 
 It can happen that there exists a (mainly data-related) functionality which is not available in the proxy object but is available through [Minerva's REST API](https://git-r3lab.uni.lu/piotr.gawron/minerva). In such case you can use Ajax to retrieve the data (the easiest way is probably to use jQuery's [getJSON](http://api.jquery.com/jquery.getjson/) function).
+
+
+
+
