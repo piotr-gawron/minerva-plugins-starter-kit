@@ -116,6 +116,7 @@ function initMainPageStructure(){
     container.append('<button type="button" class="btn-highlight-random btn btn-primary btn-default btn-block">Highlight</button>');
 
     container.append('<hr>');
+    container.append('<h4>Query UniProt API</h4>');
     container.append('<button type="button" class="btn-uniprot btn btn-primary btn-default btn-block">Retrieve from UniProt</button>');
     container.append(`
         <div class="panel panel-default panel-uniprot">
@@ -126,12 +127,38 @@ function initMainPageStructure(){
         </div>
     `);
 
+    container.append('<hr>');
+    container.append('<h4>Query Minerva API</h4>');
+    container.append(`
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Address</label>
+                <div class="col-sm-10">
+                    <input class="input-minerva-address form-control" placeholder="https://minerva-dev.lcsb.uni.lu/minerva">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Project ID</label>
+                <div class="col-sm-10">
+                    <input class="input-minerva-projectid form-control" placeholder="sample2">
+                </div>
+            </div>                        
+        </form>
+        <button type="button" class="btn-minerva btn btn-primary btn-default btn-block">Retrieve from Minerva</button>
+        <div class="panel panel-default panel-minerva">
+            <div class="panel-heading">Names of elements</div>
+            <div class="panel-body">                
+            </div>
+        </div>
+    `);
+
     container.find('.btn-highlight').on('click', () => highlightSelected() );
     container.find('.btn-focus').on('click', () => focusOnSelected() );
     container.find('.btn-pick-random').on('click', () => pickRandom() );
     container.find('.btn-highlight-random').on('click', () => highlightSelected(true) );
     container.find('.btn-focus-random').on('click', () => focusOnSelected(true) );
     container.find('.btn-uniprot').on('click', () => retrieveUniprot() );
+    container.find('.btn-minerva').on('click', () => retrieveMinerva() );
 }
 
 function searchListener(entites) {
@@ -227,13 +254,24 @@ function focusOnSelected(pickedRandomly = false) {
 }
 
 function retrieveUniprot() {
-
     const query = pluginContainer.find('.panel-randomly-picked .panel-body').text();
     $.ajax({
         type: 'GET',
         url: 'https://www.uniprot.org/uniprot/?query=' + query + '&sort=score&columns=id,entry%20name,reviewed,protein%20names,3d,genes,organism,length&format=tab&limit=10'
     }).then(function(result){
-        pluginContainer.find('.panel-uniprot .panel-body code').html(JSON.stringify(result));
+        pluginContainer.find('.panel-uniprot .panel-body code').text(result);
 
+    })
+}
+
+function retrieveMinerva() {
+    const address = pluginContainer.find('.input-minerva-address').val();
+    const projectId = pluginContainer.find('.input-minerva-projectid').val();
+
+    $.getJSON(`${address}/api/doLogin`).then(() => {
+        return $.getJSON(`${address}/api/projects/${projectId}/models/`);
+    }).then((models) => {
+        console.log('models');
+        pluginContainer.find('.panel-minerva .panel-body').text(models);
     })
 }
