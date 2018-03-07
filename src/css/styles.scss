@@ -1,0 +1,12 @@
+$badass: #bada55;
+$pluginName: starter-kit;
+
+.#{$pluginName}-container {
+  padding: 10px;
+  background-color: $badass;
+}
+
+.btn-uniprot, .btn-pick-random {
+  margin-bottom: 5px;
+}
+

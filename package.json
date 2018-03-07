@@ -1,0 +1,26 @@
+{
+  "name": "minerva-starter-kit-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-css": "node-sass --include-path src/css src/css/styles.scss src/css/styles.css",
+    "build": "mkdirp dist && npm run build-css && browserify -t [ babelify --presets es2015 ] -t browserify-css src/js/index.js | uglifyjs --compress --mangle > dist/plugin.js ",
+    "watch-js": "mkdirp dist && npm run build-css && watchify -v -t [ babelify --presets es2015 ] -t browserify-css src/js/index.js -o dist/plugin.js",
+    "clean": "rimraf dist"
+  },
+  "author": "David Hoksza",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^8.0.0",
+    "browserify": "^14.5.0",
+    "browserify-css": "^0.13.1",
+    "mkdirp": "latest",
+    "node-sass": "^4.6.1",
+    "rimraf": "latest",
+    "uglify-js": "^3.1.9",
+    "watchify": "^3.9.0"
+  }
+}
