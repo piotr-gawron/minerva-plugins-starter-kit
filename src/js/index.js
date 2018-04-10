@@ -3,6 +3,8 @@ require('../css/styles.css');
 const pluginName = 'starter-kit';
 const pluginVersion = '1.0.0';
 
+const minervaProxyServer = 'https://minerva-dev.lcsb.uni.lu/minerva-proxy/';
+
 const globals = {
     selected: [],
     allBioEntities: [],
@@ -134,13 +136,13 @@ function initMainPageStructure(){
             <div class="form-group">
                 <label class="col-sm-2 control-label">Address</label>
                 <div class="col-sm-10">
-                    <input class="input-minerva-address form-control" placeholder="https://minerva-dev.lcsb.uni.lu/minerva">
+                    <input class="input-minerva-address form-control" value="https://minerva-dev.lcsb.uni.lu/minerva">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">Project ID</label>
                 <div class="col-sm-10">
-                    <input class="input-minerva-projectid form-control" placeholder="sample2">
+                    <input class="input-minerva-projectid form-control" value="sample2">
                 </div>
             </div>                        
         </form>
@@ -268,10 +270,24 @@ function retrieveMinerva() {
     const address = pluginContainer.find('.input-minerva-address').val();
     const projectId = pluginContainer.find('.input-minerva-projectid').val();
 
-    $.getJSON(`${address}/api/doLogin`).then(() => {
-        return $.getJSON(`${address}/api/projects/${projectId}/models/`);
+    $.ajax({
+        type: 'GET',
+        url: `${minervaProxyServer}?url=${address}/api/projects/${projectId}/models/`,
+        dataType: 'json'
     }).then((models) => {
-        console.log('models');
-        pluginContainer.find('.panel-minerva .panel-body').text(models);
-    })
+        console.log(`Retrived models from ${minervaProxyServer}`, models);
+        const firstModelId = models[0].idObject;
+        return $.ajax({
+            type: 'GET',
+            url: `${minervaProxyServer}?url=${address}/api/projects/${projectId}/models/${firstModelId}/bioEntities/elements/`,
+            dataType: 'json'
+        });
+    }).then((elements) => {
+        console.log(`Retrived elements from ${minervaProxyServer}`, elements);
+        let names = '';
+        elements.forEach(function (element) {
+            names += element.name + '<br/>';
+        });
+        pluginContainer.find('.panel-minerva .panel-body').html(names);
+    });
 }
