@@ -259,7 +259,7 @@ function retrieveUniprot() {
     const query = pluginContainer.find('.panel-randomly-picked .panel-body').text();
     $.ajax({
         type: 'GET',
-        url: 'https://www.uniprot.org/uniprot/?query=' + query + '&sort=score&columns=id,entry%20name,reviewed,protein%20names,3d,genes,organism,length&format=tab&limit=10'
+        url: 'https://www.uniprot.org/uniprot/?query=' + globals.pickedRandomly.getName() + '&sort=score&columns=id,entry%20name,reviewed,protein%20names,3d,genes,organism,length&format=tab&limit=10'
     }).then(function(result){
         pluginContainer.find('.panel-uniprot .panel-body code').text(result);
 
