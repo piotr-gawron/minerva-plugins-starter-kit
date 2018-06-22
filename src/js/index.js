@@ -206,7 +206,8 @@ function highlightSelected(pickedRandomly = false) {
                     modelId: globals.pickedRandomly.getModelId(),
                     type: globals.pickedRandomly.constructor.name.toUpperCase()
                 },
-                type: "SURFACE",
+                //type: "SURFACE",
+                type: "ICON",
                 options: {
                     color: '#00FF00',
                     opacity: 0.5
